@@ -8,4 +8,3 @@ public interface Authenticable {
     boolean active();
     Set<Role> roles();
 }
-
