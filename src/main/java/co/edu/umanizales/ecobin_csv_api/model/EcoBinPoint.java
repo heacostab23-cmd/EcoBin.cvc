@@ -9,10 +9,12 @@ import lombok.AllArgsConstructor;
  * Contenedor/báscula EcoBin con geolocalización.
  * Composición: contiene Location.
  */
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EcoBinPoint {
-    private Long id;
+    private long id;
     private String name;
     private Location location;
 }

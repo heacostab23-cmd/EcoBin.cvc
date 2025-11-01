@@ -6,10 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 /** Insignia otorgada por alcanzar umbral de puntos. */
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Badge {
-    private Long id;
+    private long id;
     private String name;
     private long minPoints;
     private String description;

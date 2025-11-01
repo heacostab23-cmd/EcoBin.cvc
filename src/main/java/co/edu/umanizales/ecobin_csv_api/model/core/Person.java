@@ -9,10 +9,12 @@ import lombok.AllArgsConstructor;
  * Clase base (abstracta) para Citizen y Operator.
  * protected: las subclases pueden acceder a los campos.
  */
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Person {
-    protected Long id;
+    protected long id;
     protected String document;
     protected String firstName;
     protected String lastName;

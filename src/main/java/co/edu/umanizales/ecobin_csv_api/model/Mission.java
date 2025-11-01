@@ -9,10 +9,12 @@ import lombok.AllArgsConstructor;
  * Misión gamificada con una regla (MissionRule) y un estado.
  * Composición: contiene MissionRule.
  */
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Mission {
-    private Long id;
+    private long id;
     private String name;
     private MissionRule rule;
     private MissionStatus status;

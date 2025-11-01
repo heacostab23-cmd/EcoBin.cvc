@@ -1,0 +1,176 @@
+@startuml
+title EcoBin CSV - Class Diagram (POO - Updated Version)
+
+' =============================
+' HERENCIA Y CLASES PRINCIPALES
+' =============================
+abstract class Person {
+  {field} protected Long id
+  {field} protected String document
+  {field} protected String firstName
+  {field} protected String lastName
+  {field} protected String email
+  {method} + String fullName()
+}
+
+class Citizen {
+  + User user
+  + long points
+  + List<Badge> badges
+  + List<Reading> readings
+  + void addPoints(long)
+  + boolean subtractPoints(long)
+  + void addBadge(Badge)
+  + void addReading(Reading)
+}
+
+class Operator {
+  + User user
+  + List<EcoBinPoint> assignedPoints
+}
+
+Person <|-- Citizen
+Person <|-- Operator
+
+' =============================
+' INTERFACES
+' =============================
+interface Authenticable {
+  + boolean active()
+  + Set<Role> roles()
+}
+
+interface Notifiable {
+  + void notify(String message)
+}
+
+User ..|> Authenticable
+Citizen ..|> Notifiable
+Operator ..|> Notifiable
+
+' =============================
+' USUARIO Y ROLES
+' =============================
+class User {
+  + Long id
+  + String email
+  + String passwordHash
+  + boolean active
+  + Set<Role> roles
+  + boolean active()
+  + Set<Role> roles()
+  + void addRole(Role)
+}
+
+enum Role {
+  ADMIN
+  OPERATOR
+  CITIZEN
+}
+
+' =============================
+' ECOBIN POINT Y LOCATION (COMPOSICIÓN)
+' =============================
+class EcoBinPoint {
+  + Long id
+  + String name
+  + Location location
+}
+
+class Location <<record>> {
+  + double lat
+  + double lon
+  + String address
+}
+
+EcoBinPoint *-- Location : composition
+
+' =============================
+' TIPOS DE RESIDUO Y LECTURAS
+' =============================
+class WasteType {
+  + Long id
+  + String name
+  + String description
+}
+
+class Reading {
+  + Long id
+  + EcoBinPoint point
+  + WasteType wasteType
+  + Citizen citizen
+  + long grams
+  + java.time.LocalDateTime isoDateTime
+}
+
+Reading --> EcoBinPoint
+Reading --> WasteType
+Reading --> Citizen
+
+' =============================
+' MISIONES Y REGLAS
+' =============================
+class Mission {
+  + Long id
+  + String name
+  + MissionRule rule
+  + MissionStatus status
+}
+
+class MissionRule <<record>> {
+  + WasteType wasteType
+  + long targetKg
+  + String isoPeriod
+}
+
+enum MissionStatus {
+  ACTIVE
+  PAUSED
+  FINISHED
+}
+
+Mission *-- MissionRule : composition
+MissionRule --> WasteType
+
+' =============================
+' INSIGNIAS Y RECOMPENSAS
+' =============================
+class Badge {
+  + Long id
+  + String name
+  + long minPoints
+  + String description
+}
+
+Citizen o-- Badge : aggregation
+
+class Reward {
+  + Long id
+  + String name
+  + long costPoints
+  + int stock
+  + String description
+}
+
+' =============================
+' CANJES
+' =============================
+class Redemption {
+  + Long id
+  + Citizen citizen
+  + Reward reward
+  + RedemptionStatus status
+  + java.time.LocalDateTime isoDateTime
+}
+
+enum RedemptionStatus {
+  REQUESTED
+  APPROVED
+  DELIVERED
+  REJECTED
+}
+
+Redemption --> Citizen
+Redemption --> Reward
+
+@enduml

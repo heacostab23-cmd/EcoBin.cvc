@@ -13,10 +13,12 @@ import java.util.Set;
  * Cuenta de acceso del sistema.
  * Implementa Authenticable (polimorfismo).
  */
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Authenticable {
-    private Long id;
+    private long id;
     private String email;         // se validará formato/único a nivel de servicio
     private String passwordHash;  // nunca guardar la contraseña en texto plano
     private boolean active;

@@ -1,47 +1,52 @@
 package co.edu.umanizales.ecobin_csv_api.model.core;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
+import co.edu.umanizales.ecobin_csv_api.model.Badge;
+import co.edu.umanizales.ecobin_csv_api.model.Reading;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Citizen = ciudadano que recicla y gana puntos/insignias.
- *
- * Nota: EXTIENDE Person (herencia).
+ * Ciudadano del sistema EcoBin.
+ * - Hereda datos comunes desde Person.
+ * - Se relaciona por OBJETOS (POO): User, Badge, Reading.
  */
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Citizen extends Person {
-    private Long userId;                 // Relación con User (por ID)
-    private long points;                 // Puntos acumulados (>= 0)
-    private List<Long> badgeIds = new ArrayList<>(); // IDs de insignias que tiene
 
-    /** Sumar puntos (evita valores negativos o cero). */
+    private User user; // Relación el ciudadano TIENE un User 
+    private long points;  // Puntos acumulados por reciclar
+    private List<Badge> badges = new ArrayList<>();  // Agregación: el ciudadano mantiene sus insignias como OBJETOS
+    private List<Reading> readings = new ArrayList<>();  // Historial de lecturas como OBJETOS
+
+    /** Suma puntos solo si el valor es positivo. */
     public void addPoints(long pts) {
-        if (pts > 0) {
-            points += pts;
-        }
+        if (pts > 0) this.points += pts;
     }
 
-    /**
-     * Restar puntos si alcanza el saldo.
-     * Devuelve true si sí pudo restar, false si no.
-     */
+    /** Intenta restar puntos; true si hay saldo suficiente. */
     public boolean subtractPoints(long pts) {
-        if (pts <= 0) return false;
-        if (points < pts) return false;
-        points = points-pts;
+        if (pts <= 0 || this.points < pts) return false;
+        this.points -= pts;
         return true;
     }
 
-    /** Guardar una insignia si no la tenía. */
-    public void addBadge(Long badgeId) {
-    if (badgeId == null) return;      // Si es nulo, sale del método
-    if (!badgeIds.contains(badgeId))  // Si no está en la lista
-        badgeIds.add(badgeId);        // la agrega
-}
+    /** Agrega una insignia (objeto) si no la tenía. */
+    public void addBadge(Badge badge) {
+        if (badge != null && !badges.contains(badge)) {
+            badges.add(badge);
+        }
+    }
+
+    /** (Opcional) Agrega una lectura al historial. */
+    public void addReading(Reading reading) {
+        if (reading != null) readings.add(reading);
+    }
 }
