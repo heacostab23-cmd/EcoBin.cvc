@@ -1,20 +1,21 @@
 package co.edu.umanizales.ecobin_csv_api.model;
 
+import co.edu.umanizales.ecobin_csv_api.model.core.Citizen;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 /**
- * Redemption = canje de una Reward por un Citizen.
- * Relaciones por ID: citizenId, rewardId.
+ * Canje de una Reward por parte de un Citizen.
+ * Relaciones por OBJETO (POO): citizen y reward.
  */
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Redemption {
     private Long id;
-    private Long citizenId;          // Citizen
-    private Long rewardId;           // Reward
-    private RedemptionStatus status; // REQUESTED / APPROVED / DELIVERED / REJECTED
-    private String isoDateTime;      // ISO-8601
+    private Citizen citizen;
+    private Reward reward;
+    private RedemptionStatus status;
+    private String isoDateTime; // ISO-8601
 }

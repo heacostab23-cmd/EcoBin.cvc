@@ -10,21 +10,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * User = cuenta de acceso (credenciales y roles).
- *
- * Implementa Authenticable (polimorfismo: puedo tratar un User como Authenticable).
+ * Cuenta de acceso del sistema.
+ * Implementa Authenticable (polimorfismo).
  */
-
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class User implements Authenticable {
     private Long id;
-    private String email;         // En servicios validaremos formato y unicidad
-    private String passwordHash;  // Nunca guardes la contraseña en texto plano
-    private boolean active;       // true si la cuenta está habilitada
-    private Set<Role> roles = new HashSet<>(); // ADMIN/OPERATOR/CITIZEN
+    private String email;         // se validará formato/único a nivel de servicio
+    private String passwordHash;  // nunca guardar la contraseña en texto plano
+    private boolean active;
+    private Set<Role> roles = new HashSet<>();
 
-    // Implementaciones del contrato Authenticable:
     @Override public boolean active() { return active; }
     @Override public Set<Role> roles() { return roles; }
 
@@ -32,3 +29,4 @@ public class User implements Authenticable {
         if (role != null) roles.add(role);
     }
 }
+

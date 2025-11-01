@@ -6,14 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 /**
- * Mission = reto gamificado.
- * COMPOSICIÓN con MissionRule (regla) y un estado (MissionStatus).
+ * Misión gamificada con una regla (MissionRule) y un estado.
+ * Composición: contiene MissionRule.
  */
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Mission {
     private Long id;
-    private String name;         // Ej: "2 kg de plástico en 7 días"
-    private MissionRule rule;    // Regla (record)
-    private MissionStatus status;// ACTIVE / PAUSED / FINISHED
+    private String name;
+    private MissionRule rule;
+    private MissionStatus status;
 }

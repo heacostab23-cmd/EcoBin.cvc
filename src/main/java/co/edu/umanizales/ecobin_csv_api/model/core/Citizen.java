@@ -34,14 +34,14 @@ public class Citizen extends Person {
     public boolean subtractPoints(long pts) {
         if (pts <= 0) return false;
         if (points < pts) return false;
-        points -= pts;
+        points = points-pts;
         return true;
     }
 
     /** Guardar una insignia si no la tenía. */
     public void addBadge(Long badgeId) {
-        if (badgeId != null && !badgeIds.contains(badgeId)) {
-            badgeIds.add(badgeId);
-        }
-    }
+    if (badgeId == null) return;      // Si es nulo, sale del método
+    if (!badgeIds.contains(badgeId))  // Si no está en la lista
+        badgeIds.add(badgeId);        // la agrega
+}
 }

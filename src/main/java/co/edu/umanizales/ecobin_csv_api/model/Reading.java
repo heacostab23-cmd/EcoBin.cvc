@@ -1,22 +1,23 @@
 package co.edu.umanizales.ecobin_csv_api.model;
 
+import co.edu.umanizales.ecobin_csv_api.model.core.Citizen;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 /**
- * Reading = lectura de peso registrada en un punto.
- * Relaciones por ID: pointId, wasteTypeId, citizenId.
+ * Lectura de peso realizada por un Citizen en un EcoBinPoint para un WasteType.
+ * Relaciones por OBJETO (POO): point, wasteType, citizen.
  */
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Reading {
     private Long id;
-    private Long pointId;       // EcoBinPoint
-    private Long wasteTypeId;   // WasteType
-    private Long citizenId;     // Citizen
+    private EcoBinPoint point;
+    private WasteType wasteType;
+    private Citizen citizen;
     private long grams;         // > 0
-    private String isoDateTime; // fecha/hora en formato ISO-8601
+    private String isoDateTime; // ISO-8601
 }
 

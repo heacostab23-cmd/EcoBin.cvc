@@ -5,13 +5,11 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-/**
- * WasteType = tipo de residuo (plástico, vidrio, etc.).
- */
+/** Tipo de residuo (PLASTIC, GLASS, etc.). */
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class WasteType {
     private Long id;
-    private String name;        // Ej: "PLASTIC"
-    private String description; // Texto opcional
+    private String name;
+    private String description;
 }

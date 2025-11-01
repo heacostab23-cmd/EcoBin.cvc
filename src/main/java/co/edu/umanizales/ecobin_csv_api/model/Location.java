@@ -1,7 +1,7 @@
 package co.edu.umanizales.ecobin_csv_api.model;
 
 /**
- * Location (record) = dato inmutable para ubicación.
- * Record crea: constructor, getters y equals/hashCode automáticamente.
+ * Valor inmutable de ubicación (record).
+ * Usado por composición dentro de EcoBinPoint.
  */
 public record Location(double lat, double lon, String address) { }

@@ -5,15 +5,12 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-/**
- * Badge = insignia otorgada al superar un mínimo de puntos.
- */
+/** Insignia otorgada por alcanzar umbral de puntos. */
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class Badge {
     private Long id;
-    private String name;      // Ej: "EcoHero Lv1"
-    private long minPoints;   // Umbral de puntos (>=0)
+    private String name;
+    private long minPoints;
     private String description;
 }
-

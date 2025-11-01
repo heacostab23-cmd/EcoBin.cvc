@@ -6,13 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 /**
- * EcoBinPoint = contenedor/báscula físico.
- * Tiene una Location por COMPOSICIÓN (Location vive dentro del punto).
+ * Contenedor/báscula EcoBin con geolocalización.
+ * Composición: contiene Location.
  */
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class EcoBinPoint {
     private Long id;
     private String name;
-    private Location location; // lat/lon/dirección
+    private Location location;
 }
+
