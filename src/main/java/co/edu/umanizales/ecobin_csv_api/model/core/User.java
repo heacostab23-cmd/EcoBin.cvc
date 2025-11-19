@@ -30,5 +30,10 @@ public class User implements Authenticable {
     public void addRole(Role role) {
         if (role != null) roles.add(role);
     }
+
+    /** Constructor con solo id (para placeholders en CSV). */
+    public User(long id) {
+        this.id = id;
+    }
 }
 

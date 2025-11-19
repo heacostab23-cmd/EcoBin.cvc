@@ -17,5 +17,10 @@ public class EcoBinPoint {
     private long id;
     private String name;
     private Location location;
+
+    /** Constructor con solo id (para placeholders en CSV). */
+    public EcoBinPoint(long id) {
+        this.id = id;
+    }
 }
 

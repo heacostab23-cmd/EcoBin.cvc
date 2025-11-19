@@ -14,4 +14,9 @@ public class WasteType {
     private long id;
     private String name;
     private String description;
+
+    /** Constructor con solo id (para placeholders en CSV). */
+    public WasteType(long id) {
+        this.id = id;
+    }
 }

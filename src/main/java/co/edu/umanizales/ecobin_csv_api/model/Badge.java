@@ -13,6 +13,6 @@ import lombok.AllArgsConstructor;
 public class Badge {
     private long id;
     private String name;
-    private long minPoints;
     private String description;
+    private long requiredPoints;
 }
