@@ -49,4 +49,9 @@ public class Citizen extends Person {
     public void addReading(Reading reading) {
         if (reading != null) readings.add(reading);
     }
+
+    /** Constructor con solo id (para placeholders en CSV). */
+    public Citizen(long id) {
+        this.id = id;
+    }
 }

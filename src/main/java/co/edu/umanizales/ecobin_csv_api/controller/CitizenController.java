@@ -6,59 +6,71 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Endpoints REST para gestionar ciudadanos.
+ * Controlador REST para /api/citizens.
+ * Expone el CRUD completo para Citizen.
  */
 @RestController
 @RequestMapping("/api/citizens")
 public class CitizenController {
 
-    // Service simple, sin inyección todavía para que sea de tu nivel
-    private final CitizenService service = new CitizenService();
+    // 1. Definimos el atributo, pero SIN crear el objeto aquí
+    private final CitizenService citizenService;
 
-    /** GET /api/citizens */
+    // 2. Spring creará CitizenService y nos lo inyectará por el constructor
+    public CitizenController(CitizenService citizenService) {
+        this.citizenService = citizenService;
+    }
+
+    // ================== GET: listar todos ==================
     @GetMapping
     public List<Citizen> list() {
-        return service.list();
+        return citizenService.list();
     }
 
-    /** GET /api/citizens/{id} */
+    // ================== GET: buscar por id ==================
     @GetMapping("/{id}")
-    public ResponseEntity<Citizen> get(@PathVariable Long id) {
-        return service.get(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Citizen> get(@PathVariable long id) {
+        Optional<Citizen> citizen = citizenService.getById(id);
+        
+        if (citizen.isPresent()) {
+            return ResponseEntity.ok(citizen.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    /** POST /api/citizens */
+    // ================== POST: crear ==================
     @PostMapping
-public ResponseEntity<?> create(@RequestBody Citizen citizen) {
-    try {
-        Citizen created = service.create(citizen);
-        return ResponseEntity.ok(created);
-    } catch (IllegalArgumentException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<?> create(@RequestBody Citizen citizen) {
+        try {
+            Citizen created = citizenService.create(citizen);
+            // 200 OK con el ciudadano creado
+            return ResponseEntity.ok(created);
+        } catch (IllegalArgumentException ex) {
+            // 400 Bad Request con el mensaje de error (por ejemplo "Citizen with document ... already exists with id X")
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
-}
 
-
-
-
-    /** PUT /api/citizens/{id} */
+    // ================== PUT: actualizar ==================
     @PutMapping("/{id}")
-    public ResponseEntity<Citizen> update(@PathVariable Long id,
-                                          @RequestBody Citizen citizen) {
-        return service.update(id, citizen)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> update(@PathVariable long id, @RequestBody Citizen citizen) {
+        try {
+            Citizen updated = citizenService.update(id, citizen);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
-    /** DELETE /api/citizens/{id} */
+    // ================== DELETE: borrar ==================
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        return service.delete(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        citizenService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
+

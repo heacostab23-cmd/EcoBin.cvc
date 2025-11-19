@@ -16,4 +16,9 @@ public class Reward {
     private long costPoints; // > 0
     private int stock;       // >= 0
     private String description;
+
+    /** Constructor con solo id (para placeholders en CSV). */
+    public Reward(long id) {
+        this.id = id;
+    }
 }

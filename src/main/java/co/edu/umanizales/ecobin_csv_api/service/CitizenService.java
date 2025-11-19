@@ -2,75 +2,84 @@ package co.edu.umanizales.ecobin_csv_api.service;
 
 import co.edu.umanizales.ecobin_csv_api.model.core.Citizen;
 import co.edu.umanizales.ecobin_csv_api.repository.CitizenCsvRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Capa de negocio para Citizen.
- * Aplica validaciones sencillas antes de guardar en CSV.
+ * Lógica de negocio para Ciudadanos.
+ * Aquí validamos reglas como: no repetir documento.
  */
+@Service
 public class CitizenService {
 
-    private final CitizenCsvRepository repo = new CitizenCsvRepository();
+    private final CitizenCsvRepository repository;
+
+    public CitizenService(CitizenCsvRepository repository) {
+        this.repository = repository;
+    }
 
     /** Listar todos los ciudadanos. */
     public List<Citizen> list() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
     /** Buscar un ciudadano por id. */
-    public Optional<Citizen> get(Long id) {
-        return repo.findById(id);
+    public Optional<Citizen> getById(long id) {
+        return repository.findById(id);
     }
 
-    /** Crear un nuevo ciudadano. */
-    public Citizen create(Citizen c) {
-    // 1. Validaciones básicas
-    if (c.getDocument() == null || c.getDocument().isBlank()) {
-        throw new IllegalArgumentException("document is required");
-    }
-    if (c.getEmail() == null || !c.getEmail().contains("@")) {
-        throw new IllegalArgumentException("email format invalid");
-    }
-
-    // 2. Regla de negocio: NO permitir duplicados por document y email
-    for (Citizen existing : repo.findAll()) {
-        if (existing.getDocument().equals(c.getDocument())) {
-            throw new IllegalArgumentException("Citizen with this document already exists");
+    /**
+     * Crear un nuevo ciudadano.
+     * - Verifica que el documento venga lleno.
+     * - Verifica que no exista ya otro ciudadano con ese documento.
+     */
+    public Citizen create(Citizen citizen) {
+        // Validar que el documento no esté vacío
+        String document = citizen.getDocument();
+        if (document == null || document.isBlank()) {
+            throw new IllegalArgumentException("Document is required");
         }
-        if (existing.getEmail().equalsIgnoreCase(c.getEmail())) {
-            throw new IllegalArgumentException("Citizen with this email already exists");
+
+        // Verificar si ya existe un ciudadano con ese documento
+        Optional<Citizen> existing = repository.findByDocument(document);
+        if (existing.isPresent()) {
+            Citizen found = existing.get();
+            String errorMsg = "Citizen with document " + found.getDocument() +
+                    " already exists with id " + found.getId();
+            throw new IllegalArgumentException(errorMsg);
         }
+
+        // Si no existe, lo guardamos
+        return repository.save(citizen);
     }
 
-    // 3. Preparar el objeto antes de guardar
-    c.setId(0L); // 0 = sin id todavía
+    /**
+     * Actualizar un ciudadano existente.
+     */
+    public Citizen update(long id, Citizen data) {
+        // Buscamos el ciudadano existente
+        Optional<Citizen> optional = repository.findById(id);
+        
+        if (!optional.isPresent()) {
+            throw new IllegalArgumentException("Citizen not found with id " + id);
+        }
+        
+        Citizen existing = optional.get();
+        
+        // Actualizamos los datos
+        existing.setDocument(data.getDocument());
+        existing.setFirstName(data.getFirstName());
+        existing.setLastName(data.getLastName());
+        existing.setEmail(data.getEmail());
+        existing.setPoints(data.getPoints());
 
-    if (c.getPoints() < 0) {
-        c.setPoints(0);
+        return repository.save(existing);
     }
 
-    // 4. Guardar en el CSV
-    return repo.save(c);
-}
-
-
-    /** Actualizar un ciudadano existente. */
-    public Optional<Citizen> update(Long id, Citizen data) {
-        return repo.findById(id).map(existing -> {
-            existing.setDocument(data.getDocument());
-            existing.setFirstName(data.getFirstName());
-            existing.setLastName(data.getLastName());
-            existing.setEmail(data.getEmail());
-            existing.setPoints(Math.max(0, data.getPoints()));
-            return repo.save(existing);
-        });
-    }
-
-    /** Eliminar un ciudadano por id. */
-    public boolean delete(Long id) {
-        // Más adelante puedes impedir borrar si tiene lecturas o canjes
-        return repo.deleteById(id);
+    /** Eliminar ciudadano por id. */
+    public void delete(long id) {
+        repository.delete(id);
     }
 }
