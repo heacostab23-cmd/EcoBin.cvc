@@ -8,4 +8,4 @@ id,email,passwordHash,active,roles
 7,orleyburbano@gmail.com,1234,true,CITIZEN
 8,dannburbano@gmail.com,1234,true,CITIZEN
 9,isabellatoro@gmail.com,1234,true,CITIZEN
-10,agustinus@gmail.com,1234,true,CITIZEN
+10,agustinus@gmail.com,12345,true,CITIZEN
