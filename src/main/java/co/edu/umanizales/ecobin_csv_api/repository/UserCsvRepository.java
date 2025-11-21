@@ -27,15 +27,16 @@ public class UserCsvRepository {
     }
 
     private void ensureFileExists() {
-        try {
-            if (!Files.exists(path)) {
-                Files.createDirectories(path.getParent());
-                Files.writeString(path, "id,email,passwordHash,active\n");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error creating users.csv", e);
+    try {
+        if (!Files.exists(path)) {
+            Files.createDirectories(path.getParent());
+            // ANTES: "id,email,passwordHash,active\n"
+            Files.writeString(path, "id,email,passwordHash,active,roles\n");
         }
+    } catch (IOException e) {
+        throw new RuntimeException("Error creating users.csv", e);
     }
+}
 
     public List<User> findAll() {
         List<User> result = new ArrayList<>();
@@ -76,7 +77,7 @@ public class UserCsvRepository {
 
     public void writeAll(List<User> users) {
         List<String> lines = new ArrayList<>();
-        lines.add("id,email,passwordHash,active");
+        lines.add("id,email,passwordHash,active,roles");
         for (User u : users) {
             String[] cols = mapper.toCsv(u);
             lines.add(String.join(",", cols));

@@ -73,4 +73,3 @@ public class CitizenController {
         return ResponseEntity.noContent().build();
     }
 }
-

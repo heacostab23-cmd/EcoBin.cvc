@@ -1,1 +1,6 @@
 id,name,description,requiredPoints
+1,EcoNovato,It recognizes users who register their first recycling reading on the platform.,100
+2,EcoConstante,Awarded to those who recycle regularly for a full week.,500
+3,EcoLíder,Recognition for those who achieve important goals within their active missions.,1000
+4,EcoLeyenda,Rawarded to those who recycle over 50 kg and complete multiple missions.,5000
+5,EcoLíder,Recognition for those who achieve important goals within their active missions.,3000

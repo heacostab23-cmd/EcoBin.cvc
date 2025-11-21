@@ -3,7 +3,9 @@ package co.edu.umanizales.ecobin_csv_api.controller;
 import co.edu.umanizales.ecobin_csv_api.model.core.Operator;
 import co.edu.umanizales.ecobin_csv_api.service.OperatorService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -35,7 +37,16 @@ public class OperatorController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Operator operator) {
+    public ResponseEntity<?> create(@Valid @RequestBody Operator operator, BindingResult bindingResult) {
+        // Validar campos obligatorios
+        if (bindingResult.hasErrors()) {
+            StringBuilder errors = new StringBuilder();
+            bindingResult.getFieldErrors().forEach(error -> 
+                errors.append(error.getDefaultMessage()).append("; ")
+            );
+            return ResponseEntity.badRequest().body(errors.toString());
+        }
+        
         try {
             Operator created = service.create(operator);
             return ResponseEntity.ok(created);
@@ -45,7 +56,16 @@ public class OperatorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable long id, @RequestBody Operator operator) {
+    public ResponseEntity<?> update(@PathVariable long id, @Valid @RequestBody Operator operator, BindingResult bindingResult) {
+        // Validar campos obligatorios
+        if (bindingResult.hasErrors()) {
+            StringBuilder errors = new StringBuilder();
+            bindingResult.getFieldErrors().forEach(error -> 
+                errors.append(error.getDefaultMessage()).append("; ")
+            );
+            return ResponseEntity.badRequest().body(errors.toString());
+        }
+        
         try {
             Operator updated = service.update(id, operator);
             if (updated == null) {

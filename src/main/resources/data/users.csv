@@ -1,1 +1,11 @@
-id,email,passwordHash,active
+id,email,passwordHash,active,roles
+1,mafe@example.com,1234,true,CITIZEN
+2,kevinu@gmail.com,1234,true,OPERATOR
+3,heidya@gmail.com,1234,true,CITIZEN
+4,valea@gmail.com,1234,true,CITIZEN
+5,karlape@gmail.com,1234,true,OPERATOR
+6,carlosmj@gmail.com,1234,true,CITIZEN
+7,orleyburbano@gmail.com,1234,true,CITIZEN
+8,dannburbano@gmail.com,1234,true,CITIZEN
+9,isabellatoro@gmail.com,1234,true,CITIZEN
+10,agustinus@gmail.com,1234,true,CITIZEN

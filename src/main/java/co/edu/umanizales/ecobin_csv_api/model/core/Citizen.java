@@ -2,10 +2,10 @@ package co.edu.umanizales.ecobin_csv_api.model.core;
 
 import co.edu.umanizales.ecobin_csv_api.model.Badge;
 import co.edu.umanizales.ecobin_csv_api.model.Reading;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;

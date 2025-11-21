@@ -1,1 +1,9 @@
-id,name,description,wasteTypeId,targetKg,startDateISO,endDateISO,status,bonusPoints
+id,name,ruleId,status
+1,Mision 1,2,ACTIVE
+2,Mision 2,1,PAUSED
+3,Mision 3,3,FINISHED
+4,Mision 4,4,ACTIVE
+5,Mision 5,5,ACTIVE
+6,Mision 6,6,ACTIVE
+7,Mision 7,7,ACTIVE
+8,Mision 8,7,ACTIVE
