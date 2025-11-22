@@ -1,6 +1,7 @@
 package co.edu.umanizales.ecobin_csv_api.service;
 
 import co.edu.umanizales.ecobin_csv_api.model.MissionRule;
+import co.edu.umanizales.ecobin_csv_api.model.WasteType;
 import co.edu.umanizales.ecobin_csv_api.repository.MissionRuleCsvRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +14,46 @@ import java.util.List;
 public class MissionRuleService {
 
     private final MissionRuleCsvRepository repo;
+    private final WasteTypeService wasteTypeService;  // 👈 NUEVO
 
-    public MissionRuleService(MissionRuleCsvRepository repo) {
+    public MissionRuleService(MissionRuleCsvRepository repo,
+                              WasteTypeService wasteTypeService) {  // 👈 INYECTADO
         this.repo = repo;
+        this.wasteTypeService = wasteTypeService;
     }
 
+    /**
+     * Cargar el WasteType completo según el id que viene desde CSV.
+     */
+    private void loadWasteType(MissionRule rule) {
+        if (rule.getWasteType() != null && rule.getWasteType().getId() > 0) {
+
+            WasteType fullWaste = wasteTypeService.list().stream()
+                    .filter(w -> w.getId() == rule.getWasteType().getId())
+                    .findFirst()
+                    .orElse(null);
+
+            if (fullWaste != null) {
+                rule.setWasteType(fullWaste);
+            }
+        }
+    }
+
+    /** Listar reglas con wasteType completo */
     public List<MissionRule> list() {
-        return repo.findAll();
+        List<MissionRule> rules = repo.findAll();
+        rules.forEach(this::loadWasteType);
+        return rules;
     }
 
+    /** Buscar regla por id con wasteType completo */
     public MissionRule getById(long id) {
-        return repo.findById(id).orElse(null);
+        return repo.findById(id)
+                .map(rule -> {
+                    loadWasteType(rule);
+                    return rule;
+                })
+                .orElse(null);
     }
 
     public MissionRule create(MissionRule rule) {
@@ -33,7 +63,10 @@ public class MissionRuleService {
         if (rule.getIsoPeriod() == null || rule.getIsoPeriod().isBlank()) {
             throw new IllegalArgumentException("ISO period is required");
         }
-        return repo.save(rule);
+
+        MissionRule saved = repo.save(rule);
+        loadWasteType(saved);
+        return saved;
     }
 
     public MissionRule update(long id, MissionRule rule) {
@@ -47,10 +80,14 @@ public class MissionRuleService {
         if (rule.getIsoPeriod() == null || rule.getIsoPeriod().isBlank()) {
             throw new IllegalArgumentException("ISO period is required");
         }
+
         existing.setWasteType(rule.getWasteType());
         existing.setTargetKg(rule.getTargetKg());
         existing.setIsoPeriod(rule.getIsoPeriod());
-        return repo.save(existing);
+
+        MissionRule saved = repo.save(existing);
+        loadWasteType(saved);
+        return saved;
     }
 
     public boolean delete(long id) {

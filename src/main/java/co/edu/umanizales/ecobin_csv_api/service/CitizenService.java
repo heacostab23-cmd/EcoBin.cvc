@@ -2,6 +2,7 @@ package co.edu.umanizales.ecobin_csv_api.service;
 
 import co.edu.umanizales.ecobin_csv_api.model.core.Citizen;
 import co.edu.umanizales.ecobin_csv_api.repository.CitizenCsvRepository;
+import co.edu.umanizales.ecobin_csv_api.repository.UserCsvRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,19 +16,46 @@ import java.util.Optional;
 public class CitizenService {
 
     private final CitizenCsvRepository repository;
+    private final UserCsvRepository userRepo;
 
-    public CitizenService(CitizenCsvRepository repository) {
+    public CitizenService(CitizenCsvRepository repository, UserCsvRepository userRepo) {
         this.repository = repository;
+        this.userRepo = userRepo;
+    }
+
+    /**
+     * Cargar el User asociado al Citizen (si existe un usuario con el mismo email).
+     */
+    private void loadUser(Citizen citizen) {
+        // Si el citizen no tiene email, no hay cómo buscar
+        if (citizen.getEmail() == null || citizen.getEmail().isBlank()) {
+            return;
+        }
+
+        // Buscar el user que tenga el mismo email en users.csv
+        userRepo.findByEmail(citizen.getEmail())
+                .ifPresent(citizen::setUser);
     }
 
     /** Listar todos los ciudadanos. */
     public List<Citizen> list() {
-        return repository.findAll();
+        List<Citizen> citizens = repository.findAll();
+
+        // Enriquecemos cada citizen con su user (si existe)
+        for (Citizen c : citizens) {
+            loadUser(c);
+        }
+
+        return citizens;
     }
 
     /** Buscar un ciudadano por id. */
     public Optional<Citizen> getById(long id) {
-        return repository.findById(id);
+        return repository.findById(id)
+                .map(citizen -> {
+                    loadUser(citizen); // también cargamos el user aquí
+                    return citizen;
+                });
     }
 
     /**
@@ -52,7 +80,12 @@ public class CitizenService {
         }
 
         // Si no existe, lo guardamos
-        return repository.save(citizen);
+        Citizen saved = repository.save(citizen);
+
+        // Intentar cargar su user (por si ya existe en users.csv)
+        loadUser(saved);
+
+        return saved;
     }
 
     /**
@@ -61,19 +94,22 @@ public class CitizenService {
     public Citizen update(long id, Citizen data) {
         // Buscamos el ciudadano existente
         Optional<Citizen> optional = repository.findById(id);
-        
+
         if (!optional.isPresent()) {
             throw new IllegalArgumentException("Citizen not found with id " + id);
         }
-        
+
         Citizen existing = optional.get();
-        
+
         // Actualizamos los datos
         existing.setDocument(data.getDocument());
         existing.setFirstName(data.getFirstName());
         existing.setLastName(data.getLastName());
         existing.setEmail(data.getEmail());
         existing.setPoints(data.getPoints());
+
+        // Volvemos a intentar ligar el user según el nuevo email
+        loadUser(existing);
 
         return repository.save(existing);
     }
